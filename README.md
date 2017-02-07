@@ -1,1 +1,1 @@
-知识诊断实时计算，基于Spark Streaming。
+ 实时收集应用程序日志，统一发送到kafka中
