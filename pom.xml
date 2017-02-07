@@ -1,0 +1,187 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <groupId>com.xuele.bigdata</groupId>
+    <artifactId>log_to_kafka</artifactId>
+    <version>1.0.0-SNAPSHOT</version>
+
+    <properties>
+        <scala.version>2.11.8</scala.version>
+        <spark.version>2.0.2</spark.version>
+        <scala.redis.version>3.3</scala.redis.version>
+        <spark.streaming.version>2.0.2</spark.streaming.version>
+        <spark.kafka.version>2.0.2</spark.kafka.version>
+        <kafka.version>0.9.0.0</kafka.version>
+        <hbase.version>1.2.0</hbase.version>
+        <config.version>1.2.1</config.version>
+        <guava.version>12.0</guava.version>
+        <joad-time.version>2.9.4</joad-time.version>
+        <fast.json>1.2.15</fast.json>
+        <scala.logging.version>3.1.0</scala.logging.version>
+        <logback.version>1.1.7</logback.version>
+        <json-simple.version>1.1.1</json-simple.version>
+    </properties>
+
+
+      <!--  echo %JAVA_HOME%  -->
+      <!--   set JAVA_HOME="E:\jdk7"    -->
+
+    <dependencies>
+
+        <dependency>
+            <groupId>com.googlecode.json-simple</groupId>
+            <artifactId>json-simple</artifactId>
+            <version>${json-simple.version}</version>
+        </dependency>
+
+        <!-- https://mvnrepository.com/artifact/ch.qos.logback/logback-classic -->
+        <dependency>
+            <groupId>ch.qos.logback</groupId>
+            <artifactId>logback-classic</artifactId>
+            <version>${logback.version}</version>
+        </dependency>
+
+
+
+        <dependency>
+            <groupId>joda-time</groupId>
+            <artifactId>joda-time</artifactId>
+            <version>${joad-time.version}</version>
+        </dependency>
+
+        <!--json解析框架-->
+        <dependency>
+            <groupId>com.alibaba</groupId>
+            <artifactId>fastjson</artifactId>
+            <version>${fast.json}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>com.google.guava</groupId>
+            <artifactId>guava</artifactId>
+            <version>${guava.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.kafka</groupId>
+            <artifactId>kafka-clients</artifactId>
+            <version>${kafka.version}</version>
+        </dependency>
+
+
+    </dependencies>
+    <build>
+
+
+        <pluginManagement>
+            <plugins>
+                <plugin>
+                    <groupId>net.alchim31.maven</groupId>
+                    <artifactId>scala-maven-plugin</artifactId>
+                    <version>3.2.1</version>
+                </plugin>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-compiler-plugin</artifactId>
+                    <version>2.0.2</version>
+                </plugin>
+            </plugins>
+        </pluginManagement>
+        <plugins>
+            <plugin>
+                <groupId>net.alchim31.maven</groupId>
+                <artifactId>scala-maven-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <id>scala-compile-first</id>
+                        <phase>process-resources</phase>
+                        <goals>
+                            <goal>add-source</goal>
+                            <goal>compile</goal>
+                        </goals>
+                    </execution>
+                    <execution>
+                        <id>scala-test-compile</id>
+                        <phase>process-test-resources</phase>
+                        <goals>
+                            <goal>testCompile</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <phase>compile</phase>
+                        <goals>
+                            <goal>compile</goal>
+                        </goals>
+                    </execution>
+                </executions>
+
+                <configuration>
+
+                    <source>1.8</source>
+
+                    <target>1.8</target>
+
+                    <encoding>UTF-8</encoding>
+
+                </configuration>
+            </plugin>
+        </plugins>
+
+        <filters>
+            <filter>src/main/filters/log-${build.profile.id}.properties</filter>
+        </filters>
+
+        <!--指定下面的目录为资源文件-->
+        <resources>
+            <!--设置自动替换-->
+            <resource>
+                <directory>src/main/resources</directory>
+                <includes>
+                    <include>**/*</include>
+                </includes>
+                <!--也可以用排除标签-->
+                <!--<excludes></excludes>-->
+                <!--开启过滤-->
+                <filtering>true</filtering>
+            </resource>
+        </resources>
+    </build>
+    <profiles>
+        <!--默认激活开发配置，使用index-dev.properties来替换实际的文件key-->
+        <profile>
+            <id>dev</id>
+            <activation>
+                <activeByDefault>true</activeByDefault>
+            </activation>
+            <properties>
+                <build.profile.id>dev</build.profile.id>
+            </properties>
+        </profile>
+
+        <!-- 测试环境配置 -->
+        <profile>
+            <id>test</id>
+            <properties>
+                <build.profile.id>test</build.profile.id>
+            </properties>
+        </profile>
+
+        <!-- 生产环境配置 -->
+        <profile>
+            <id>product</id>
+            <properties>
+                <build.profile.id>product</build.profile.id>
+            </properties>
+        </profile>
+    </profiles>
+
+
+</project>
